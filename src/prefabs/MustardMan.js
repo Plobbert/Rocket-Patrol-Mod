@@ -4,20 +4,17 @@ class MustardMan extends Phaser.GameObjects.Sprite {
         scene.add.existing(this);
         this.movementSpeed = 3;
         this.isFiring = false;
-        this.texture = texture;
-        console.log(this.texture);
     }
 
     update() {
-        if (this.texture = 'rocket') {
-            if(keyA.isDown) {
+            if(keyLEFT.isDown) {
                 this.x -= this.movementSpeed;
             }
-            if(keyD.isDown) {
+            if(keyRIGHT.isDown) {
                 this.x += this.movementSpeed;
             }
 
-            if(Phaser.Input.Keyboard.JustDown(keyW)) {
+            if(Phaser.Input.Keyboard.JustDown(keyUP)) {
                 this.isFiring = true;
             }
     
@@ -25,7 +22,6 @@ class MustardMan extends Phaser.GameObjects.Sprite {
                 this.x,
                 borderUISize + borderPadding,
                 game.config.width - borderUISize - borderPadding);
-        }
     }
 
     reset() {

@@ -4,20 +4,17 @@ class Player extends Phaser.GameObjects.Sprite {
         scene.add.existing(this);
         this.movementSpeed = 3;
         this.isFiring = false;
-        this.texture = texture;
-        console.log(this.texture);
     }
 
     update() {
-        if (this.texture = 'mustardMan') {
-            if(keyLEFT.isDown) {
+            if(keyA.isDown) {
                 this.x -= this.movementSpeed;
             }
-            if(keyRIGHT.isDown) {
+            if(keyD.isDown) {
                 this.x += this.movementSpeed;
             }
 
-            if(Phaser.Input.Keyboard.JustDown(keyUP)) {
+            if(Phaser.Input.Keyboard.JustDown(keyW)) {
                 this.isFiring = true;
             }
     
@@ -25,7 +22,6 @@ class Player extends Phaser.GameObjects.Sprite {
                 this.x,
                 borderUISize + borderPadding,
                 game.config.width - borderUISize - borderPadding);
-         }
     }
 
     reset() {

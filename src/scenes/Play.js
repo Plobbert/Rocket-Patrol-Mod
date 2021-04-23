@@ -8,11 +8,16 @@ class Play extends Phaser.Scene {
         this.load.image('rocket', './assets/chef.png');
         this.load.image('spaceship', './assets/patty.png');
         this.load.image('starfield', './assets/conveyerbelt3.png');
-        this.load.audio('sfx_explosion', './assets/explosion38.wav');
+        this.load.audio('backgroundmusic', './assets/music.wav');
+        this.load.audio('splat', './assets/splat.wav');
+        this.load.audio('win', './assets/win.wav');
         this.load.image('background', './assets/kitchenbackground1.png');
         this.load.image('shot', './assets/ketchup.png');
         this.load.image('mustardShot', './assets/mustard.png');
         this.load.image('mustardMan', './assets/mustardman.png');
+        this.load.image('mustardWin', './assets/mustardend.png');
+        this.load.image('ketchupWin', './assets/ketchupend2.png');
+
 
         // load spritesheet
         this.load.spritesheet('explosion', './assets/anim3.png', {frameWidth: 60.333, frameHeight: 61, startFrame: 0, endFrame: 8});
@@ -20,6 +25,8 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+
+        this.sound.play('backgroundmusic');
         // place tile sprite
         this.background = this.add.tileSprite(0, 0, 640, 480, 'background').setOrigin(0, 0);
         this.starfield = this.add.tileSprite(0, 50, 640, 256, 'starfield').setOrigin(0, 0);
@@ -66,10 +73,10 @@ class Play extends Phaser.Scene {
         this.p2Score = 0;
 
         // display score
-        let scoreConfig = {
+        let ketchupscoreConfig = {
             fontFamily: 'Courier',
             fontSize: '28px',
-            backgroundColor: '#845128',
+            backgroundColor: '#c67575',
             color: '#FFFFFF',
             align: 'right',
             padding: {
@@ -78,25 +85,51 @@ class Play extends Phaser.Scene {
             },
             fixedWidth: 100
         }
-        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
-        this.scoreRight = this.add.text(game.config.width - (borderUISize + borderPadding) - 100, borderUISize + borderPadding*2, this.p2Score, scoreConfig);
+
+        let mustardscoreConfig = {
+            fontFamily: 'Courier',
+            fontSize: '28px',
+            backgroundColor: '#bca728',
+            color: '#FFFFFF',
+            align: 'right',
+            padding: {
+                top: 5,
+                bottom: 5,
+            },
+            fixedWidth: 100
+        }
+        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, ketchupscoreConfig);
+        this.scoreRight = this.add.text(game.config.width - (borderUISize + borderPadding) - 100, borderUISize + borderPadding*2, this.p2Score, mustardscoreConfig);
 
         // GAME OVER flag
         this.gameOver = false;
 
         let isRocket = false;
         let isMRocket = false;
+        this.scrollSpeed = 2;
+
+        this.clock2 = this.time.delayedCall(30000, () => {
+            this.scrollSpeed = 3;
+            this.ship01.movementspeed = 3;
+            this.ship02.movementspeed = 3;
+            this.ship03.movementspeed = 3;
+            
+        }, null, this);
 
         // 60-second play clock
-        scoreConfig.fixedWidth = 0;
         this.clock = this.time.delayedCall(60000, () => {
-            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← to Menu', scoreConfig).setOrigin(0.5);
+            if (this.p1Score > this.p2Score) {
+                this.endScreen = this.add.tileSprite(0, 0, 640, 480, 'ketchupWin').setOrigin(0, 0);
+            } else {
+                this.endScreen = this.add.tileSprite(0, 0, 640, 480, 'mustardWin').setOrigin(0, 0);
+            }
+            this.sound.play('win');
             this.gameOver = true;
         }, null, this);
     }
 
     update() {
+
         // check key input for restart / menu
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
             this.scene.restart();
@@ -106,7 +139,7 @@ class Play extends Phaser.Scene {
             this.scene.start("menuScene");
         }
 
-        this.starfield.tilePositionX += 3;  // update tile sprite
+        this.starfield.tilePositionX += this.scrollSpeed;  // update tile sprite
 
         if (this.p1Rocket.isFiring == true && !this.isRocket) {
             this.fireRocket = new Rocket(this, this.p1Rocket.x + 2, this.p1Rocket.y - 20, 'shot').setOrigin(0.5, 0);
@@ -215,7 +248,7 @@ class Play extends Phaser.Scene {
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score; 
         
-        this.sound.play('sfx_explosion');
+        this.sound.play('splat');
       }
 
       shipMExplode(ship) {
@@ -233,6 +266,6 @@ class Play extends Phaser.Scene {
         this.p2Score += ship.points;
         this.scoreRight.text = this.p2Score; 
         
-        this.sound.play('sfx_explosion');
+        this.sound.play('splat');
       }
 }
