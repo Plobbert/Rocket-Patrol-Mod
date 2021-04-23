@@ -1,3 +1,22 @@
+//////////////////////
+// Maxwell Mollison
+// Ketchup vs Mustard (Rocket Patrol Mod)
+// Took roughly 10 hours
+// April 23rd, 2021
+// 
+//////////////////////
+// POINT BREAKDOWN
+// ---------------
+//
+// - Redesign the game's artwork, UI, and sound to change its theme/aesthetic (to something other than sci-fi) (60)
+// - Implement a simultaneous two-player mode (30)
+// - Allow the player to control the Rocket after it's fired (5)
+// - Implement the speed increase that happens after 30 seconds in the original game (5)
+///////////////////////
+
+
+
+
 let config = {
     type: Phaser.CANVAS,
     width: 640,
